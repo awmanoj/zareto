@@ -1,0 +1,101 @@
+
+ConfigUpdater - A writer implementation for the config using a file that contains all configs: 
+==============================================================================================
+ 
+zareto$ java -cp "/home/mawasthi/box/zookeeper-3.4.6/lib/*:/home/mawasthi/box/zookeeper-3.4.6/*:target/lsns-4.0.jar" ConfigUpdater localhost
+Usage: ConfigUpdater <zookeeper> <file>
+
+
+ConfigWatcher - A reader implementation for the config using item ID:
+======================================================================
+
+mawasthi@mawasthi-1:~/tinker/hackathon/venturesity/final2/zareto$ java -cp "/home/mawasthi/box/zookeeper-3.4.6/lib/*:/home/mawasthi/box/zookeeper-3.4.6/*:target/lsns-4.0.jar" ConfigWatcher localhost
+Usage: ConfigWatcher <zookeeper> <item_id>
+
+---------------------------------------------------------------------------
+
+Following are contents of two text files which are used to test stuff: 
+==========================================================
+
+zareto$ cat /home/mawasthi/tinker/hackathon/venturesity/final2/sample.txt 
+13579,title,freakonomics
+13579,authors,Levitt & Dubner
+13579,release date,20-09-2011
+13579,list price,7 USD
+13579,publisher,William Morrow
+1248,title,Effective Java
+1248,authors,Joshua Bloch
+1248,list price,10 USD
+1248,publisher,Addison-Wesley
+
+zareto$ cat /home/mawasthi/tinker/hackathon/venturesity/final2/sample2.txt 
+13579,list price,11 USD
+
+
+mawasthi@mawasthi-1:~/tinker/hackathon/venturesity/final2/zareto$
+mawasthi@mawasthi-1:~/tinker/hackathon/venturesity/final2/zareto$ java -cp "/home/mawasthi/box/zookeeper-3.4.6/lib/*:/home/mawasthi/box/zookeeper-3.4.6/*:target/lsns-4.0.jar" ConfigUpdater localhost /home/mawasthi/tinker/hackathon/venturesity/final2/sample.txt 
+	log4j:WARN No appenders could be found for logger (org.apache.zookeeper.ZooKeeper).
+	log4j:WARN Please initialize the log4j system properly.
+	log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+	13579,title,freakonomics
+	13579,authors,Levitt & Dubner
+	13579,release date,20-09-2011
+	13579,list price,7 USD
+	13579,publisher,William Morrow
+	1248,title,Effective Java
+	1248,authors,Joshua Bloch
+	1248,list price,10 USD
+	1248,publisher,Addison-Wesley
+	Written on /config/1248 :
+	{list price=10 USD, publisher=Addison-Wesley, title=Effective Java, authors=Joshua Bloch}
+	setting the /config/1248/list_price to 10 USD
+	setting the /config/1248/publisher to Addison-Wesley
+	setting the /config/1248/title to Effective Java
+	setting the /config/1248/authors to Joshua Bloch
+	Written on /config/13579 :
+	{list price=7 USD, publisher=William Morrow, title=freakonomics, release date=20-09-2011, authors=Levitt & Dubner}
+	setting the /config/13579/list_price to 7 USD
+	setting the /config/13579/publisher to William Morrow
+	setting the /config/13579/title to freakonomics
+	setting the /config/13579/release_date to 20-09-2011
+	setting the /config/13579/authors to Levitt & Dubner
+
+mawasthi@mawasthi-1:~/tinker/hackathon/venturesity/final2/zareto$ java -cp "/home/mawasthi/box/zookeeper-3.4.6/lib/*:/home/mawasthi/box/zookeeper-3.4.6/*:target/lsns-4.0.jar" ConfigWatcher localhost 13579
+	log4j:WARN No appenders could be found for logger (org.apache.zookeeper.ZooKeeper).
+	log4j:WARN Please initialize the log4j system properly.
+	log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+	release_date=20-09-2011
+	authors=Levitt & Dubner
+	title=freakonomics
+	list_price=7 USD
+	publisher=William Morrow
+
+mawasthi@mawasthi-1:~/tinker/hackathon/venturesity/final2/zareto$ java -cp "/home/mawasthi/box/zookeeper-3.4.6/lib/*:/home/mawasthi/box/zookeeper-3.4.6/*:target/lsns-4.0.jar" ConfigWatcher localhost 1248
+	log4j:WARN No appenders could be found for logger (org.apache.zookeeper.ZooKeeper).
+	log4j:WARN Please initialize the log4j system properly.
+	log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+	authors=Joshua Bloch
+	title=Effective Java
+	list_price=10 USD
+	publisher=Addison-Wesley
+
+
+mawasthi@mawasthi-1:~/tinker/hackathon/venturesity/final2/zareto$ java -cp "/home/mawasthi/box/zookeeper-3.4.6/lib/*:/home/mawasthi/box/zookeeper-3.4.6/*:target/lsns-4.0.jar" ConfigUpdater localhost /home/mawasthi/tinker/hackathon/venturesity/final2/sample2.txt 
+	log4j:WARN No appenders could be found for logger (org.apache.zookeeper.ZooKeeper).
+	log4j:WARN Please initialize the log4j system properly.
+	log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+	13579,list price,11 USD
+	Written on /config/13579 :
+	{list price=11 USD}
+	setting the /config/13579/list_price to 11 USD
+
+mawasthi@mawasthi-1:~/tinker/hackathon/venturesity/final2/zareto$ java -cp "/home/mawasthi/box/zookeeper-3.4.6/lib/*:/home/mawasthi/box/zookeeper-3.4.6/*:target/lsns-4.0.jar" ConfigWatcher localhost 13579
+	log4j:WARN No appenders could be found for logger (org.apache.zookeeper.ZooKeeper).
+	log4j:WARN Please initialize the log4j system properly.
+	log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+	release_date=20-09-2011
+	authors=Levitt & Dubner
+	title=freakonomics
+	list_price=11 USD
+	publisher=William Morrow
+

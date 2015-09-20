@@ -1,0 +1,42 @@
+Introduction: 
+
+Problem#1 Large scale notification service 
+
+
+I believe Apache Zookeeper comes handy for the problem. There are multiple endpoints of the service. 
+
+	1) File Watcher Service: A service which keeps looking for new files being added to a shared folder. Files can be 
+		arbitrarily large and they can be large in number too. For this, we should use a distributed file system. 
+		Apache HDFS is one choice of such a filesystem.
+		
+		Service on seeing a new file say file0.txt calls ConfigUpdater with the <zookeeper host> and the <file path> as 
+		argument.
+
+	2) ConfigUpdater: ConfigUpdater reads the file from the path, parses it and stores the information in zookeeper in 
+		a hierarchical config information fashion. Following is the zk hierarchy: 
+
+				/
+				`-- config
+					|-- 1248
+					|   |-- authors
+					|   |-- list_price
+					|   |-- publisher
+					|   |-- release_date
+					|   `-- title
+					`-- 13579
+						|-- authors
+						|-- list_price
+						|-- publisher
+						|-- release_date
+						`-- title
+
+	3) READ Service: Read service gets requests on web. It can be a spring boot application. It receives requests like "GET 13579" and 
+		uses ConfigWatcher to read data from zookeeper node and serve it in realtime.
+
+
+	4) ConfigWatcher: ConfigWatcher reads the data from zookeeper nodes corresponding to a given ID (13579, 1248.. ) and returns it back. 
+
+	5) Notification Service: This will be part of the code in ActiveKeyValueStore which updates the nodes. Based on the conditions pre-parsed 
+		it will notify the subscriber set if the conditions are met for any such leaf nodes in zk. Code has comments regarding the same.
+
+			
